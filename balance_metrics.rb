@@ -16,7 +16,7 @@ get '/' do
     t.transcription_text.include?("Your food stamp balance is")
   end
   # Subtract Dave's initial text
-  @real_transcriptions_count = @successful_transcriptions.count - 1
+  @real_transactions_count = @successful_transcriptions.count - 1
   @inbound_messages = client.account.messages.list.select { |m| m.direction == 'inbound' }
   @inbound_calls = client.account.calls.list.select { |m| m.direction == 'inbound' }
   erb :index
