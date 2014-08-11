@@ -1,0 +1,21 @@
+<h1>Balance Metrics</h1>
+
+<h2>Inbound Text Messages: <%= @inbound_messages.count %></h2>
+<ul>
+  <% @inbound_messages.each do |m| %>
+    <li>
+      <% time = Time.parse(m.date_created) %>
+      <%= m.from + ' — ' + time.to_s + ' — ' + m.body %>
+    </li>
+  <% end %>
+</ul>
+<h2>Inbound Calls: <%= @inbound_calls.count %></h2>
+<ul>
+  <% @inbound_calls.each do |c| %>
+    <li>
+      <% time = Time.parse(c.date_created) %>
+      <%= c.from + ' — ' + time.to_s %>
+    </li>
+  <% end %>
+</ul>
+
