@@ -1,5 +1,6 @@
 <h1>Balance Metrics</h1>
 
+<h2>Successful Balance Checks: <%= @successful_transcriptions.count %></h2>
 <h2>Inbound Text Messages: <%= @inbound_messages.count %></h2>
 <ul>
   <% @inbound_messages.each do |m| %>
