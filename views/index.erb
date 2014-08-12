@@ -3,16 +3,16 @@
 <h2>Successful Balance Checks: <%= @successful_outbound_balance_texts.count %></h2>
   <% @successful_outbound_balance_texts.each do |m| %>
     <li>
-      <% time = Time.parse(m.date_created) %>
-      <%= m.to + ' — ' + @phone_number_hash[m.from] + ' — ' + time.to_s + ' — ' + m.body %>
+      <% time = Time.parse(m.date_created).utc + Time.zone_offset("PDT") %>
+      <%= m.to + ' — ' + @phone_number_hash[m.from] + ' — ' + time.strftime("%a %m/%d/%Y %I:%M %p") + ' — ' + m.body %>
     </li>
   <% end %>
 <h2>Inbound Text Messages: <%= @inbound_messages.count %></h2>
 <ul>
   <% @inbound_messages.each do |m| %>
     <li>
-      <% time = Time.parse(m.date_created) %>
-      <%= m.from + ' — ' + @phone_number_hash[m.to] + ' — ' + time.to_s + ' — ' + m.body %>
+      <% time = Time.parse(m.date_created).utc + Time.zone_offset("PDT") %>
+      <%= m.from + ' — ' + @phone_number_hash[m.to] + ' — ' + time.strftime("%a %m/%d/%Y %I:%M %p") + ' — ' + m.body %>
     </li>
   <% end %>
 </ul>
@@ -20,8 +20,8 @@
 <ul>
   <% @inbound_calls.each do |c| %>
     <li>
-      <% time = Time.parse(c.date_created) %>
-      <%= c.from + ' — ' + @phone_number_hash[c.to] + ' — ' + time.to_s %>
+      <% time = Time.parse(c.date_created).utc + Time.zone_offset("PDT") %>
+      <%= c.from + ' — ' + @phone_number_hash[c.to] + ' — ' + time.strftime("%a %m/%d/%Y %I:%M %p") %>
     </li>
   <% end %>
 </ul>
