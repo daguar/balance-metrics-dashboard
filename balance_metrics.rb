@@ -19,7 +19,7 @@ get '/' do
     @phone_number_hash[number.phone_number] = funnel_name
   end
   @successful_outbound_balance_texts = client.account.messages.list.select do |m|
-    m.body.include?("Hi! Your food stamp balance is") && !m.to.include?("471446")
+    m.body.include?("Hi! Your food stamp balance is") && !m.to.include?("471446") && !m.to.include?("109902770")
   end
   @inbound_messages = client.account.messages.list.select { |m| m.direction == 'inbound' }
   @inbound_calls = client.account.calls.list.select { |m| m.direction == 'inbound' }
