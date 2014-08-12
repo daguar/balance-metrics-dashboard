@@ -12,11 +12,15 @@ end
 
 get '/' do
   client = Twilio::REST::Client.new(ENV['TWILIO_BALANCE_PROD_SID'], ENV['TWILIO_BALANCE_PROD_AUTH'])
-  @successful_transcriptions = client.account.transcriptions.list.select do |t|
-    t.transcription_text.include?("Your food stamp balance is")
+  @phone_number_hash = Hash.new
+  client.account.incoming_phone_numbers.list.each do |number|
+    funnel_name = number.friendly_name
+    funnel_name.slice!('balance-')
+    @phone_number_hash[number.phone_number] = funnel_name
   end
-  # Subtract Dave's initial text
-  @real_transactions_count = @successful_transcriptions.count - 1
+  @successful_outbound_balance_texts = client.account.messages.list.select do |m|
+    m.body.include?("Hi! Your food stamp balance is") && !m.to.include?("471446")
+  end
   @inbound_messages = client.account.messages.list.select { |m| m.direction == 'inbound' }
   @inbound_calls = client.account.calls.list.select { |m| m.direction == 'inbound' }
   erb :index
