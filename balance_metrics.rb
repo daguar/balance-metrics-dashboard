@@ -20,11 +20,25 @@ get '/' do
     funnel_name.slice!('balance-')
     @phone_number_hash[number.phone_number] = funnel_name
   end
-  @successful_outbound_balance_texts = client.account.messages.list.select do |m|
+  all_messages = process_multipage_list(client.account.messages.list, Array.new)
+  @successful_outbound_balance_texts = all_messages.select do |m|
     m.body.include?("Hi! Your food stamp balance is") && !m.to.include?("471446") && !m.to.include?("109902770")
   end
-  @inbound_messages = client.account.messages.list.select { |m| m.direction == 'inbound' }
-  @inbound_calls = client.account.calls.list.select { |m| m.direction == 'inbound' }
+  @inbound_messages = all_messages.select { |m| m.direction == 'inbound' }
+  all_calls = process_multipage_list(client.account.calls.list, Array.new)
+  @inbound_calls = all_calls.select { |m| m.direction == 'inbound' }
   erb :index
 end
 
+helpers do
+  def process_multipage_list(list, return_array)
+    list.each do |item|
+      return_array << item
+    end
+    if list.next_page != []
+      process_multipage_list(list.next_page, return_array)
+    else
+      return return_array
+    end
+  end
+end
