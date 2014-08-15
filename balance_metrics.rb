@@ -17,7 +17,6 @@ get '/' do
   @phone_number_hash = Hash.new
   client.account.incoming_phone_numbers.list.each do |number|
     funnel_name = number.friendly_name
-    funnel_name.slice!('balance-')
     @phone_number_hash[number.phone_number] = funnel_name
   end
   all_messages = process_multipage_list(client.account.messages.list, Array.new)
