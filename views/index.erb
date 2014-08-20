@@ -1,5 +1,8 @@
 <h1>Balance Metrics</h1>
 
+<h2>Metrics</h2>
+<iframe width='800' height='600' frameborder='0' seamless='seamless' scrolling='no' src='<%= @chart_url %>.embed?width=800&height=600'></iframe>
+
 <h2>Successful Balance Checks: <%= @successful_outbound_balance_texts.count %></h2>
   <% @successful_outbound_balance_texts.each do |m| %>
     <li>
@@ -25,4 +28,3 @@
     </li>
   <% end %>
 </ul>
-

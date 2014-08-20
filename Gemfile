@@ -5,6 +5,7 @@ ruby '2.1.1'
 gem 'twilio-ruby'
 gem 'sinatra'
 gem 'rack-ssl'
+gem 'plotly'
 
 group :development do
   gem 'pry'
