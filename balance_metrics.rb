@@ -30,36 +30,59 @@ get '/' do
   all_calls = process_multipage_list(client.account.calls.list, Array.new)
   @inbound_calls = all_calls.select { |m| m.direction == 'inbound' }
 
-  # Make some chartz
+  # Let's make some chartsz!!
   plotly = PlotLy.new(ENV['PLOTLY_USERNAME'], ENV['PLOTLY_API_KEY'])
 
-  # Get data
-  @check_dates = []
+  # Get data for totals
+  @balance_dates = []
   @successful_outbound_balance_texts.each do |sms|
-    @check_dates << Date.parse(sms.date_sent).to_date
+    @balance_dates << Date.parse(sms.date_sent).to_date
   end
 
-  @check_hash = Hash[@check_dates.group_by {|x| x}.map {|k,v| [k,v.count]}]
-  y = @check_hash.values.reverse
+  @balance_hash = Hash[@balance_dates.group_by {|x| x}.map {|k,v| [k,v.count]}]
+  y = @balance_hash.values.reverse
   sum = 0
   @y_cumulative = y.map { |i| sum += i }
-  data = {
-    'x' => @check_hash.keys.map { |d| d.strftime }.reverse,
+  total_trace = {
+    'name' => 'Total successful checks',
+    'x' => @balance_hash.keys.map { |d| d.strftime }.reverse,
     'y' => @y_cumulative
   }
 
-  kwargs = {
-    filename: 'Balance metrics',
-    # fileopt: 'overwrite',
+  # Get data by phone number
+  @data = [total_trace]
+
+  # Get source > msg hash
+  source_hash = @successful_outbound_balance_texts.group_by { |sms| sms.from }
+  source_hash.keys.each do | source | # Loop through each source
+    @date_array = []
+    source_hash[source].each do | sms |
+      @date_array << Date.parse(sms.date_sent).to_date
+    end
+    @source_date_hash = Hash[@date_array.group_by {|x| x}.map {|k,v| [k,v.count]}]
+    y = @source_date_hash.values.reverse
+    sum = 0
+    @y_cumulative = y.map { |i| sum += i }
+
+  trace = {
+    'name' => @phone_number_hash[source],
+    'x' => @source_date_hash.keys.map { |d| d.strftime }.reverse,
+    'y' => @y_cumulative
+  }
+
+  @data << trace
+  end
+
+  layout = {
     style: { type: 'scatter' },
     layout: {
-      title: 'Total successful checks'
+      title: 'Balance Metrics'
     },
     world_readable: true
   }
 
   @chart_url = ""
-  plotly.plot(data, kwargs) do |response|
+  plotly.plot(data = @data, layout = layout) do |response|
     @chart_url = response['url']
   end
 
