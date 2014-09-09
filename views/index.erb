@@ -1,5 +1,10 @@
 <h1>Balance Metrics</h1>
 
+<h2>KPIs</h2>
+<h3># of successful balance checks: <%= @successful_outbound_balance_texts.count %></h3>
+<h3># of unique users with 1+ successful balance checks: <%= @number_of_unique_phone_numbers_with_a_successful_balance_check %></h3>
+<h3>% of users who check their balance more than once: <%= @percent_of_users_with_more_than_one_success %></h3>
+
 <h2>Successful Balance Checks: <%= @successful_outbound_balance_texts.count %></h2>
   <% @successful_outbound_balance_texts.each do |m| %>
     <li>
