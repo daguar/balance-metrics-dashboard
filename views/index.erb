@@ -16,13 +16,3 @@
     </li>
   <% end %>
 </ul>
-<h2>Inbound Calls: <%= @inbound_calls.count %></h2>
-<ul>
-  <% @inbound_calls.each do |c| %>
-    <li>
-      <% time = Time.parse(c.date_created).utc + Time.zone_offset("PDT") %>
-      <%= c.from + ' — ' + @phone_number_hash[c.to] + ' — ' + time.strftime("%a %m/%d/%Y %I:%M %p") %>
-    </li>
-  <% end %>
-</ul>
-

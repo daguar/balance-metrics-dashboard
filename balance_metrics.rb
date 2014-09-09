@@ -24,8 +24,6 @@ get '/' do
     m.body.include?("Hi! Your food stamp balance is") && !m.to.include?("471446") && !m.to.include?("109902770")
   end
   @inbound_messages = all_messages.select { |m| m.direction == 'inbound' }
-  all_calls = process_multipage_list(client.account.calls.list, Array.new)
-  @inbound_calls = all_calls.select { |m| m.direction == 'inbound' }
   erb :index
 end
 
